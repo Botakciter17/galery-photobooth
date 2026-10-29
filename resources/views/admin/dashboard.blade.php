@@ -393,7 +393,7 @@
         <div class="session-card">
             <div class="session-thumb-box">
                 @if ($strip)
-                    <img src="{{ $strip->url }}" alt="{{ $session->session_code }}" class="session-thumb-img" loading="lazy" />
+                    <img src="{{ route('guest.view.photo', ['slug' => $session->slug, 'photoId' => $strip->id]) }}" alt="{{ $session->session_code }}" class="session-thumb-img" loading="lazy" />
                 @else
                     <div style="color: #64748B; font-size: 0.8rem;">No Strip Image</div>
                 @endif

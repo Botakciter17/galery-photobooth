@@ -120,7 +120,8 @@ class SessionUploadController extends Controller
             }
         }
 
-        $guestUrl = url('/s/' . $photoSession->slug);
+        $baseUrl = rtrim(config('app.url') ?: url('/'), '/');
+        $guestUrl = $baseUrl . '/s/' . $photoSession->slug;
 
         return response()->json([
             'success' => true,

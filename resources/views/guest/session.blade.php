@@ -300,7 +300,7 @@
     @if ($stripPhoto)
     <div class="card">
         <div class="strip-preview-wrapper">
-            <img src="{{ $stripPhoto->url }}" alt="Polaroid Strip" class="strip-img" />
+            <img src="{{ route('guest.view.photo', ['slug' => $session->slug, 'photoId' => $stripPhoto->id]) }}" alt="Polaroid Strip" class="strip-img" />
         </div>
 
         <a href="{{ route('guest.download.photo', ['slug' => $session->slug, 'photoId' => $stripPhoto->id]) }}" class="btn btn-primary" download>
@@ -328,7 +328,7 @@
             <div class="single-photo-card">
                 <div class="single-photo-img-box">
                     <span class="single-photo-badge">#{{ $single->photo_index }}</span>
-                    <img src="{{ $single->url }}" alt="Pose {{ $single->photo_index }}" loading="lazy" />
+                    <img src="{{ route('guest.view.photo', ['slug' => $session->slug, 'photoId' => $single->id]) }}" alt="Pose {{ $single->photo_index }}" loading="lazy" />
                 </div>
                 <div class="single-photo-action">
                     <a href="{{ route('guest.download.photo', ['slug' => $session->slug, 'photoId' => $single->id]) }}" class="btn-download-single" download>

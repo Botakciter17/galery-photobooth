@@ -27,6 +27,9 @@ class SessionPhoto extends Model
 
     public function getUrlAttribute(): string
     {
-        return Storage::url($this->file_path);
+        if ($this->photoSession && $this->photoSession->slug) {
+            return route('guest.view.photo', ['slug' => $this->photoSession->slug, 'photoId' => $this->id]);
+        }
+        return Storage::disk('public')->url($this->file_path);
     }
 }

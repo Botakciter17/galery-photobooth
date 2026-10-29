@@ -11,6 +11,7 @@ Route::get('/', function () {
 // Guest Photo Download Routes (Mobile QR Destination)
 Route::prefix('s')->group(function () {
     Route::get('/{slug}', [GuestController::class, 'show'])->name('guest.session');
+    Route::get('/{slug}/view/{photoId}', [GuestController::class, 'viewPhoto'])->name('guest.view.photo');
     Route::get('/{slug}/download/{photoId}', [GuestController::class, 'downloadPhoto'])->name('guest.download.photo');
     Route::get('/{slug}/download-zip', [GuestController::class, 'downloadZip'])->name('guest.download.zip');
 });

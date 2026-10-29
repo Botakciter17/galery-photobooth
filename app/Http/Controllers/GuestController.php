@@ -23,6 +23,24 @@ class GuestController extends Controller
         return view('guest.session', compact('session', 'stripPhoto', 'singlePhotos'));
     }
 
+    public function viewPhoto(string $slug, int $photoId)
+    {
+        $session = PhotoSession::where('slug', $slug)->firstOrFail();
+        $photo = SessionPhoto::where('photo_session_id', $session->id)
+            ->where('id', $photoId)
+            ->firstOrFail();
+
+        $path = Storage::disk('public')->path($photo->file_path);
+        if (!file_exists($path)) {
+            abort(404, 'File photo not found on server.');
+        }
+
+        return response()->file($path, [
+            'Content-Type' => 'image/jpeg',
+            'Cache-Control' => 'public, max-age=86400',
+        ]);
+    }
+
     public function downloadPhoto(string $slug, int $photoId): BinaryFileResponse
     {
         $session = PhotoSession::where('slug', $slug)->firstOrFail();
