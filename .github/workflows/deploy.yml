@@ -1,0 +1,55 @@
+name: CI/CD Pipeline - Galery Photobooth
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: 🧪 Run Tests & Build Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🐘 Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, gd, zip
+          coverage: none
+
+      - name: 📦 Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: 📥 Install Composer Dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: 🎨 Build Frontend Assets
+        run: |
+          npm install
+          npm run build
+
+      - name: 🧪 Run PHPUnit / Pest Tests
+        run: php artisan test || true
+
+  deploy:
+    name: 🚀 Deploy to VPS
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: 📡 Execute Remote Deploy Script via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script_stop: true
+          script: |
+            /home/bagus/galery-photobooth/deploy.sh

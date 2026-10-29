@@ -1,0 +1,12 @@
+services:
+  photobooth:
+    build: .
+    container_name: photobooth-app
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./storage:/app/storage
+      - ./database:/app/database
+      - ./.env:/app/.env
+      - ./public/build:/app/public/build
