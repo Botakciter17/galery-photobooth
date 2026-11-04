@@ -60,10 +60,7 @@ class SessionUploadController extends Controller
             ->first();
 
         if (!$photoSession) {
-            // Generate unique short slug
-            do {
-                $slug = Str::lower(Str::random(7));
-            } while (PhotoSession::where('slug', $slug)->exists());
+            $slug = $sessionCode;
 
             $photoSession = PhotoSession::create([
                 'event_id' => $event->id,
