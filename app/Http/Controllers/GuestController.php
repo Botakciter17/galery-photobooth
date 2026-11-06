@@ -15,7 +15,12 @@ class GuestController extends Controller
     {
         $session = PhotoSession::with(['event', 'photos'])
             ->where('slug', $slug)
-            ->firstOrFail();
+            ->orWhere('session_code', $slug)
+            ->first();
+
+        if (!$session) {
+            return view('guest.processing', ['slug' => $slug]);
+        }
 
         $stripPhoto = $session->photos->firstWhere('type', 'strip');
         $singlePhotos = $session->photos->where('type', 'single')->sortBy('photo_index');
@@ -25,7 +30,10 @@ class GuestController extends Controller
 
     public function viewPhoto(string $slug, int $photoId)
     {
-        $session = PhotoSession::where('slug', $slug)->firstOrFail();
+        $session = PhotoSession::where('slug', $slug)
+            ->orWhere('session_code', $slug)
+            ->firstOrFail();
+
         $photo = SessionPhoto::where('photo_session_id', $session->id)
             ->where('id', $photoId)
             ->firstOrFail();
@@ -43,7 +51,10 @@ class GuestController extends Controller
 
     public function downloadPhoto(string $slug, int $photoId): BinaryFileResponse
     {
-        $session = PhotoSession::where('slug', $slug)->firstOrFail();
+        $session = PhotoSession::where('slug', $slug)
+            ->orWhere('session_code', $slug)
+            ->firstOrFail();
+
         $photo = SessionPhoto::where('photo_session_id', $session->id)
             ->where('id', $photoId)
             ->firstOrFail();
@@ -67,6 +78,7 @@ class GuestController extends Controller
     {
         $session = PhotoSession::with(['event', 'photos'])
             ->where('slug', $slug)
+            ->orWhere('session_code', $slug)
             ->firstOrFail();
 
         $zip = new ZipArchive();
